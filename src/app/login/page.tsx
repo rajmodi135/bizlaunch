@@ -6,7 +6,7 @@ import { Lock, User, ShieldCheck, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const [role, setRole] = useState<"user" | "admin">("user");
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -16,16 +16,16 @@ export default function LoginPage() {
     setError("");
 
     // Simple authentication logic for demonstration
-    if (role === "admin" && email === "admin@bizlaunch.com" && password === "admin123") {
+    if (role === "admin" && userId === "BizLaunch" && password === "Jaipur@6621") {
       localStorage.setItem("auth_token", "admin_token");
       localStorage.setItem("user_role", "admin");
       router.push("/admin");
-    } else if (role === "user" && email === "user@bizlaunch.com" && password === "user123") {
+    } else if (role === "user" && userId === "User" && password === "User@123") {
       localStorage.setItem("auth_token", "user_token");
       localStorage.setItem("user_role", "user");
       router.push("/");
     } else {
-      setError("Invalid email or password. Use admin@bizlaunch.com/admin123 or user@bizlaunch.com/user123");
+      setError(`Invalid credentials. Use Admin: BizLaunch / Jaipur@6621 or User: User / User@123`);
     }
   };
 
@@ -63,16 +63,16 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">User ID</label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
-                type="email"
+                type="text"
                 required
                 className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="email@bizlaunch.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter User ID"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
               />
             </div>
           </div>

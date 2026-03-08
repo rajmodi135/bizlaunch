@@ -11,7 +11,7 @@ import {
   Search, 
   LayoutDashboard,
   LogOut,
-  Mail,
+  User as UserIcon,
   CheckCircle2,
   XCircle
 } from "lucide-react";
@@ -19,22 +19,22 @@ import {
 type User = {
   id: string;
   name: string;
-  email: string;
+  userId: string;
   role: "admin" | "user";
   status: "active" | "inactive";
   joinedDate: string;
 };
 
 const initialUsers: User[] = [
-  { id: "1", name: "Admin Raj", email: "admin@bizlaunch.com", role: "admin", status: "active", joinedDate: "Mar 01, 2026" },
-  { id: "2", name: "User John", email: "user@bizlaunch.com", role: "user", status: "active", joinedDate: "Mar 05, 2026" },
+  { id: "1", name: "BizLaunch Admin", userId: "BizLaunch", role: "admin", status: "active", joinedDate: "Mar 01, 2026" },
+  { id: "2", name: "Standard User", userId: "User", role: "user", status: "active", joinedDate: "Mar 05, 2026" },
 ];
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newUser, setNewUser] = useState({ name: "", email: "", role: "user" as "admin" | "user" });
+  const [newUser, setNewUser] = useState({ name: "", userId: "", role: "user" as "admin" | "user" });
   const router = useRouter();
 
   useEffect(() => {
@@ -55,13 +55,13 @@ export default function AdminPanel() {
     const user: User = {
       id: Date.now().toString(),
       name: newUser.name,
-      email: newUser.email,
+      userId: newUser.userId,
       role: newUser.role,
       status: "active",
       joinedDate: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
     };
     setUsers([...users, user]);
-    setNewUser({ name: "", email: "", role: "user" });
+    setNewUser({ name: "", userId: "", role: "user" });
     setShowAddModal(false);
   };
 
@@ -73,7 +73,7 @@ export default function AdminPanel() {
 
   const filteredUsers = users.filter(u => 
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    u.userId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -121,7 +121,7 @@ export default function AdminPanel() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="text"
-                placeholder="Search users by name or email..."
+                placeholder="Search users by name or ID..."
                 className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -151,7 +151,7 @@ export default function AdminPanel() {
                         <div>
                           <p className="font-bold text-slate-900">{user.name}</p>
                           <div className="flex items-center gap-1 text-slate-400 text-sm">
-                            <Mail size={12} /> {user.email}
+                            <UserIcon size={12} /> {user.userId}
                           </div>
                         </div>
                       </div>
@@ -208,13 +208,13 @@ export default function AdminPanel() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">User ID</label>
                 <input
-                  type="email"
+                  type="text"
                   required
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                  value={newUser.userId}
+                  onChange={(e) => setNewUser({...newUser, userId: e.target.value})}
                 />
               </div>
               <div>

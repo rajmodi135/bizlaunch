@@ -13,7 +13,11 @@ import {
   LogOut,
   User as UserIcon,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Key,
+  Eye,
+  EyeOff,
+  AlertCircle
 } from "lucide-react";
 
 type User = {
@@ -34,6 +38,11 @@ export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showPassModal, setShowPassModal] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [passForm, setPassForm] = useState({ old: "", new: "", confirm: "" });
+  const [passError, setPassError] = useState("");
+  const [passSuccess, setPassSuccess] = useState(false);
   const [newUser, setNewUser] = useState({ name: "", userId: "", role: "user" as "admin" | "user" });
   const router = useRouter();
 
@@ -48,6 +57,32 @@ export default function AdminPanel() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_role");
     router.push("/login");
+  };
+
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassError("");
+    setPassSuccess(false);
+
+    const currentPass = localStorage.getItem("admin_password") || "Jaipur@6621";
+    
+    if (passForm.old !== currentPass) {
+      setPassError("Incorrect current password.");
+      return;
+    }
+    if (passForm.new !== passForm.confirm) {
+      setPassError("New passwords do not match.");
+      return;
+    }
+    if (passForm.new.length < 6) {
+      setPassError("Password must be at least 6 characters.");
+      return;
+    }
+
+    localStorage.setItem("admin_password", passForm.new);
+    setPassSuccess(true);
+    setPassForm({ old: "", new: "", confirm: "" });
+    setTimeout(() => setShowPassModal(false), 2000);
   };
 
   const handleAddUser = (e: React.FormEvent) => {
@@ -86,6 +121,12 @@ export default function AdminPanel() {
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">Admin Console</h1>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setShowPassModal(true)}
+            className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
+          >
+            <Key size={18} /> Password
+          </button>
           <button 
             onClick={() => router.push("/")}
             className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
@@ -242,6 +283,92 @@ export default function AdminPanel() {
                   className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
                 >
                   Save User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {showPassModal && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in zoom-in-95 duration-200">
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Change Password</h3>
+            <p className="text-slate-500 text-sm mb-6">Update your admin login credentials.</p>
+            
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Current Password</label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    value={passForm.old}
+                    onChange={(e) => setPassForm({...passForm, old: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">New Password</label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    value={passForm.new}
+                    onChange={(e) => setPassForm({...passForm, new: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Confirm New Password</label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    required
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    value={passForm.confirm}
+                    onChange={(e) => setPassForm({...passForm, confirm: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                {showPass ? "Hide Passwords" : "Show Passwords"}
+              </button>
+
+              {passError && (
+                <div className="flex items-center gap-2 text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-100">
+                  <AlertCircle size={16} />
+                  <span>{passError}</span>
+                </div>
+              )}
+
+              {passSuccess && (
+                <div className="flex items-center gap-2 text-emerald-600 text-sm bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                  <CheckCircle2 size={16} />
+                  <span>Password updated successfully!</span>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-4">
+                <button 
+                  type="button"
+                  onClick={() => setShowPassModal(false)}
+                  className="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-all"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-1 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
+                >
+                  Update
                 </button>
               </div>
             </form>

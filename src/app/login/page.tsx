@@ -19,16 +19,20 @@ export default function LoginPage() {
     // Simple authentication logic for demonstration
     const normalizedUserId = userId.toLowerCase();
     
-    if (role === "admin" && normalizedUserId === "bizlaunch" && password === "Jaipur@6621") {
+    // Get stored passwords or use defaults
+    const storedAdminPass = localStorage.getItem("admin_password") || "Jaipur@6621";
+    const storedUserPass = localStorage.getItem("user_password") || "User@123";
+    
+    if (role === "admin" && normalizedUserId === "bizlaunch" && password === storedAdminPass) {
       localStorage.setItem("auth_token", "admin_token");
       localStorage.setItem("user_role", "admin");
       router.push("/admin");
-    } else if (role === "user" && normalizedUserId === "user" && password === "User@123") {
+    } else if (role === "user" && normalizedUserId === "user" && password === storedUserPass) {
       localStorage.setItem("auth_token", "user_token");
       localStorage.setItem("user_role", "user");
       router.push("/");
     } else {
-      setError(`Invalid credentials. Use Admin: BizLaunch / Jaipur@6621 or User: User / User@123`);
+      setError(`Invalid credentials. Check your User ID or Password.`);
     }
   };
 

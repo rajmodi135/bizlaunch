@@ -13,6 +13,7 @@ import {
   LogOut
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { clsx, type ClassValue } from "clsx";
 
 import { twMerge } from "tailwind-merge";
@@ -32,10 +33,20 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [userName, setUserName] = useState("User");
+  const [userRole, setUserRole] = useState("User");
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("user_name");
+    const storedRole = localStorage.getItem("user_role");
+    if (storedName) setUserName(storedName);
+    if (storedRole) setUserRole(storedRole);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_role");
+    localStorage.removeItem("user_name");
     router.push("/login");
   };
 
@@ -72,18 +83,29 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-800 space-y-2">
-        <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
-          <Settings size={20} />
-          <span className="font-medium">Settings</span>
-        </button>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-500 transition-all font-bold"
-        >
-          <LogOut size={20} />
-          <span>Logout</span>
-        </button>
+      <div className="p-4 border-t border-slate-800 space-y-4">
+        <div className="px-4 py-2 flex items-center gap-3">
+          <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-blue-500 font-bold border border-slate-700">
+            {userName.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold truncate text-slate-200">{userName}</p>
+            <p className="text-xs text-slate-500 capitalize">{userRole}</p>
+          </div>
+        </div>
+        <div className="space-y-1">
+          <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all text-sm font-medium">
+            <Settings size={18} />
+            <span>Settings</span>
+          </button>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-500 transition-all font-bold text-sm"
+          >
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </div>
   );

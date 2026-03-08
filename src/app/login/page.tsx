@@ -48,6 +48,7 @@ export default function LoginPage() {
     if (isValid) {
       localStorage.setItem("auth_token", `${role}_token`);
       localStorage.setItem("user_role", role);
+      localStorage.setItem("user_name", matchingUser ? matchingUser.name : (role === "admin" ? "Admin" : "User"));
       router.push(role === "admin" ? "/admin" : "/");
     } else {
       setError(`Invalid credentials. Check your User ID or Password.`);

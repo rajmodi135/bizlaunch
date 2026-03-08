@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { 
   Users, 
   TrendingUp, 
@@ -18,11 +19,28 @@ const stats = [
 const recentActivity: any[] = [];
 
 export default function Dashboard() {
+  const [userName, setUserName] = useState("Guest");
+  const [greeting, setGreeting] = useState("Welcome back");
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("user_name");
+    if (storedName) setUserName(storedName);
+
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+  }, []);
+
   return (
     <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome back!</h1>
-        <p className="text-slate-500">Here's what's happening with your agency today.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight mb-2 text-slate-900">
+            {greeting}, {userName}!
+          </h1>
+          <p className="text-slate-500 text-lg">Here's what's happening with your agency today.</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

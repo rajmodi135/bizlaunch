@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Manage and scale your web development business",
 };
 
-import Sidebar from "@/components/Sidebar";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function RootLayout({
   children,
@@ -29,12 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex h-screen bg-slate-50 overflow-hidden text-slate-900">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-slate-50">
-            {children}
-          </main>
-        </div>
+        <AuthGuard>{children}</AuthGuard>
       </body>
     </html>
   );

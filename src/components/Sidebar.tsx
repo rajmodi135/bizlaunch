@@ -9,9 +9,12 @@ import {
   Settings, 
   FileText, 
   Zap,
-  Globe
+  Globe,
+  LogOut
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
+
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -28,9 +31,16 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user_role");
+    router.push("/login");
+  };
 
   return (
-    <div className="flex flex-col h-screen w-64 bg-slate-900 text-white border-r border-slate-800">
+    <div className="flex flex-col h-screen w-64 bg-slate-900 text-white border-r border-slate-800 shrink-0">
       <div className="p-6 flex items-center gap-3">
         <div className="bg-blue-600 p-2 rounded-lg">
           <Globe size={24} />
@@ -62,10 +72,17 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-800">
+      <div className="p-4 border-t border-slate-800 space-y-2">
         <button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
           <Settings size={20} />
           <span className="font-medium">Settings</span>
+        </button>
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-500 transition-all font-bold"
+        >
+          <LogOut size={20} />
+          <span>Logout</span>
         </button>
       </div>
     </div>

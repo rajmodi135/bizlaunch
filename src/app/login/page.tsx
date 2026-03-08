@@ -16,11 +16,13 @@ export default function LoginPage() {
     setError("");
 
     // Simple authentication logic for demonstration
-    if (role === "admin" && userId === "BizLaunch" && password === "Jaipur@6621") {
+    const normalizedUserId = userId.toLowerCase();
+    
+    if (role === "admin" && normalizedUserId === "bizlaunch" && password === "Jaipur@6621") {
       localStorage.setItem("auth_token", "admin_token");
       localStorage.setItem("user_role", "admin");
       router.push("/admin");
-    } else if (role === "user" && userId === "User" && password === "User@123") {
+    } else if (role === "user" && normalizedUserId === "user" && password === "User@123") {
       localStorage.setItem("auth_token", "user_token");
       localStorage.setItem("user_role", "user");
       router.push("/");

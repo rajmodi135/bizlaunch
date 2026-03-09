@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
   const location = searchParams.get("location");
-  const clientApiKey = searchParams.get("apiKey");
-  const apiKey = clientApiKey || process.env.GOOGLE_MAPS_API_KEY;
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
   if (!query || !location) {
     return NextResponse.json({ error: "Query and location are required" }, { status: 400 });

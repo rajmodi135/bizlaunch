@@ -1,6 +1,7 @@
- "use client";
- 
+"use client";
+
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { 
   Users, 
   TrendingUp, 
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const [userName, setUserName] = useState("Guest");
   const [greeting, setGreeting] = useState("Welcome back");
   const [leadCount, setLeadCount] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const storedName = localStorage.getItem("user_name");

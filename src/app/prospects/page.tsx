@@ -32,6 +32,7 @@ export default function ProspectFinder() {
   const [isSimulated, setIsSimulated] = useState(false);
   const [showApiSetup, setShowApiSetup] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const isStaticDemo = process.env.NEXT_PUBLIC_GITHUB_PAGES === "true";
 
   // Load API key from localStorage on mount
   useEffect(() => {
@@ -53,15 +54,22 @@ export default function ProspectFinder() {
     setIsSimulated(false);
     
     try {
-      const response = await fetch(`/api/prospects?query=${encodeURIComponent(query)}&location=${encodeURIComponent(location)}&apiKey=${apiKey}`);
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error);
+      if (isStaticDemo) {
+        setResults([
+          { id: "1", name: "The Coffee House", rating: "4.8", address: `123 Main St, ${location || 'Your City'}`, phone: "555-0123", website: "", category: query || "Cafe" },
+          { id: "2", name: "Green Garden Bistro", rating: "4.2", address: `456 Oak Ave, ${location || 'Your City'}`, phone: "555-0456", website: "", category: query || "Restaurant" },
+          { id: "3", name: "Modern Auto Repair", rating: "4.5", address: `789 Pine Rd, ${location || 'Your City'}`, phone: "555-0789", website: "", category: query || "Auto Services" },
+        ]);
+        setIsSimulated(true);
+      } else {
+        const response = await fetch(`/api/prospects?query=${encodeURIComponent(query)}&location=${encodeURIComponent(location)}`);
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        setResults(data.results || []);
+        setIsSimulated(data.isSimulated);
       }
-      
-      setResults(data.results || []);
-      setIsSimulated(data.isSimulated);
     } catch (error) {
       console.error("Search failed:", error);
       // Fallback results if API fails or no key
@@ -109,17 +117,24 @@ export default function ProspectFinder() {
           <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">Prospect Finder</h1>
           <p className="text-slate-500 text-lg">Search Google Maps for high-rated businesses without a website.</p>
         </div>
-        <button 
-          onClick={() => setShowApiSetup(true)}
-          className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg ${
-            apiKey 
-              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20" 
-              : "bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
-          }`}
-        >
-          <Settings size={18} />
-          {apiKey ? "API Key Connected" : "Connect API Key"}
-        </button>
+        {!isStaticDemo && (
+          <button 
+            onClick={() => setShowApiSetup(true)}
+            className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg ${
+              apiKey 
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20" 
+                : "bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
+            }`}
+          >
+            <Settings size={18} />
+            {apiKey ? "API Key Connected" : "Connect API Key"}
+          </button>
+        )}
+        {isStaticDemo && (
+          <div className="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            Static Demo Mode
+          </div>
+        )}
       </div>
 
       {showApiSetup && (

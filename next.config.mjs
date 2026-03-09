@@ -2,16 +2,14 @@
 const isPages = process.env.GITHUB_PAGES === "true";
 const repoBase = "/BizLaunch";
 
-const config = {
-  output: "export",
-  trailingSlash: true,
-  images: { unoptimized: true },
-  ...(isPages
-    ? {
-        basePath: repoBase,
-        assetPrefix: `${repoBase}/`,
-      }
-    : {}),
-};
+const config = isPages
+  ? {
+      output: "export",
+      trailingSlash: true,
+      images: { unoptimized: true },
+      basePath: repoBase,
+      assetPrefix: `${repoBase}/`,
+    }
+  : {};
 
 export default config;

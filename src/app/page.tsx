@@ -42,7 +42,11 @@ export default function Dashboard() {
     { name: "Conversion Rate", value: "0%", change: "+0%", icon: TrendingUp, color: "bg-orange-500" },
   ];
 
-  const recentActivity: any[] = [];
+  const recentActivity = [
+    { business: "Bakery & Co", action: "New Lead", time: "2h ago", status: "New" },
+    { business: "Auto Fix", action: "Email Opened", time: "4h ago", status: "Pending" },
+    { business: "Law Firm", action: "Meeting Booked", time: "1d ago", status: "Active" },
+  ];
 
   return (
     <div className="p-8 bg-background min-h-screen transition-colors">

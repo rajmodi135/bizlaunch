@@ -42,14 +42,12 @@ export default function LoginPage() {
     
     // Load users from DataService
     const storedUsers = await dataService.getUsers();
-    console.log("Login Debug: Loaded users:", storedUsers.length);
     
     // Find matching user
     const matchingUser = storedUsers.find((u: any) => 
       u.userId.trim().toLowerCase() === normalizedUserId && 
       u.role === role
     );
-    console.log("Login Debug: Matching user found:", !!matchingUser);
 
     // Get stored passwords or use defaults if user not found in list (fallback)
     const adminPassFromService = await dataService.getAdminPassword();
@@ -61,10 +59,8 @@ export default function LoginPage() {
     if (matchingUser) {
       // Check password from database user
       const dbPass = (matchingUser.password || "").trim();
-      console.log("Login Debug: Comparing passwords. Input:", normalizedPassword, "DB:", dbPass);
       isValid = normalizedPassword === dbPass;
     } else {
-      console.log("Login Debug: User not found in DB, trying hardcoded fallback");
       // Fallback for default hardcoded credentials
       if (role === "admin" && normalizedUserId === "bizlaunch") {
         isValid = normalizedPassword === defaultAdminPass;

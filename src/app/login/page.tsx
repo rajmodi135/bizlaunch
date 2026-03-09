@@ -42,12 +42,14 @@ export default function LoginPage() {
     
     // Load users from DataService
     const storedUsers = await dataService.getUsers();
+    console.log("Login Debug: Loaded users:", storedUsers.length);
     
     // Find matching user
     const matchingUser = storedUsers.find((u: any) => 
       u.userId.trim().toLowerCase() === normalizedUserId && 
       u.role === role
     );
+    console.log("Login Debug: Matching user found:", !!matchingUser);
 
     // Get stored passwords or use defaults if user not found in list (fallback)
     const adminPassFromService = await dataService.getAdminPassword();
@@ -55,10 +57,15 @@ export default function LoginPage() {
     const defaultUserPass = "User@123"; // Base default
     
     let isValid = false;
+    
     if (matchingUser) {
-      isValid = normalizedPassword === matchingUser.password?.trim();
+      // Check password from database user
+      const dbPass = (matchingUser.password || "").trim();
+      console.log("Login Debug: Comparing passwords. Input:", normalizedPassword, "DB:", dbPass);
+      isValid = normalizedPassword === dbPass;
     } else {
-      // Fallback for default credentials if list is empty or user not in list
+      console.log("Login Debug: User not found in DB, trying hardcoded fallback");
+      // Fallback for default hardcoded credentials
       if (role === "admin" && normalizedUserId === "bizlaunch") {
         isValid = normalizedPassword === defaultAdminPass;
       } else if (role === "user" && normalizedUserId === "user") {
@@ -70,9 +77,13 @@ export default function LoginPage() {
       localStorage.setItem("auth_token", `${role}_token`);
       localStorage.setItem("user_role", role);
       localStorage.setItem("user_name", matchingUser ? matchingUser.name : (role === "admin" ? "Admin" : "User"));
+      if (matchingUser) {
+        localStorage.setItem("user_id", matchingUser.id);
+        localStorage.setItem("user_email", matchingUser.userId);
+      }
       router.push(role === "admin" ? "/admin" : "/");
     } else {
-      setError(`Invalid credentials. Check your User ID or Password.`);
+      setError("Invalid credentials. Check your User ID or Password.");
     }
   };
 

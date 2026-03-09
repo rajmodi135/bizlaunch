@@ -6,7 +6,6 @@ import {
   LayoutDashboard, 
   Search, 
   Users, 
-  Settings, 
   FileText, 
   Zap,
   Globe,
@@ -35,24 +34,25 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState("User");
-  const [userRole, setUserRole] = useState("User");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [userName] = useState(() => {
+    if (typeof window === "undefined") return "User";
+    return localStorage.getItem("user_name") || "User";
+  });
+  const [userRole] = useState(() => {
+    if (typeof window === "undefined") return "User";
+    return localStorage.getItem("user_role") || "User";
+  });
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "dark";
+    const stored = localStorage.getItem("theme") as "dark" | "light" | null;
+    return stored ?? "dark";
+  });
 
   useEffect(() => {
-    const storedName = localStorage.getItem("user_name");
-    const storedRole = localStorage.getItem("user_role");
-    if (storedName) setUserName(storedName);
-    if (storedRole) setUserRole(storedRole);
-  }, []);
-
-  useEffect(() => {
-    const storedTheme = (localStorage.getItem("theme") as "dark" | "light") || "dark";
-    setTheme(storedTheme);
-    document.documentElement.dataset.theme = storedTheme;
+    document.documentElement.dataset.theme = theme;
     document.documentElement.classList.remove("dark", "light");
-    document.documentElement.classList.add(storedTheme);
-  }, []);
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";

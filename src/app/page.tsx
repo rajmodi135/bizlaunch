@@ -14,20 +14,20 @@ import {
 import { dataService } from "@/utils/dataService";
 
 export default function Dashboard() {
-  const [userName, setUserName] = useState("Guest");
-  const [greeting, setGreeting] = useState("Welcome back");
+  const [userName] = useState(() => {
+    if (typeof window === "undefined") return "Guest";
+    return localStorage.getItem("user_name") || "Guest";
+  });
+  const [greeting] = useState(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  });
   const [leadCount, setLeadCount] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
-    const storedName = localStorage.getItem("user_name");
-    if (storedName) setUserName(storedName);
-
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good Morning");
-    else if (hour < 17) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
-
     const fetchStats = async () => {
       const leads = await dataService.getLeads();
       setLeadCount(leads.length);
@@ -55,7 +55,7 @@ export default function Dashboard() {
           <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">
             {greeting}, {userName}!
           </h1>
-          <p className="text-slate-500 text-lg font-medium">Here's what's happening with your agency today.</p>
+          <p className="text-slate-500 text-lg font-medium">Here&apos;s what&apos;s happening with your agency today.</p>
         </div>
       </div>
 

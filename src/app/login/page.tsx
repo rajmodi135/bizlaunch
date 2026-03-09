@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, User, ShieldCheck, AlertCircle, Eye, EyeOff, Sun, Moon } from "lucide-react";
+import { Lock, User as UserIcon, ShieldCheck, AlertCircle, Eye, EyeOff, Sun, Moon } from "lucide-react";
 
-import { dataService } from "@/utils/dataService";
+import { dataService, type User } from "@/utils/dataService";
 
 export default function LoginPage() {
   const [role, setRole] = useState<"user" | "admin">("user");
@@ -12,16 +12,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "dark";
+    const stored = localStorage.getItem("theme") as "dark" | "light" | null;
+    return stored ?? "dark";
+  });
   const router = useRouter();
 
   useEffect(() => {
-    const storedTheme = (localStorage.getItem("theme") as "dark" | "light") || "dark";
-    setTheme(storedTheme);
-    document.documentElement.dataset.theme = storedTheme;
+    document.documentElement.dataset.theme = theme;
     document.documentElement.classList.remove("dark", "light");
-    document.documentElement.classList.add(storedTheme);
-  }, []);
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -44,7 +46,7 @@ export default function LoginPage() {
     const storedUsers = await dataService.getUsers();
     
     // Find matching user
-    const matchingUser = storedUsers.find((u: any) => 
+    const matchingUser = storedUsers.find((u: User) => 
       u.userId.trim().toLowerCase() === normalizedUserId && 
       u.role === role
     );
@@ -100,7 +102,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full bg-card rounded-[2.5rem] shadow-2xl border border-border p-10 relative z-10 transition-colors">
         <div className="text-center mb-10">
           <div className="inline-flex p-5 bg-blue-500/10 rounded-3xl text-blue-400 mb-6 border border-blue-500/20 shadow-lg">
-            {role === "admin" ? <ShieldCheck size={40} /> : <User size={40} />}
+            {role === "admin" ? <ShieldCheck size={40} /> : <UserIcon size={40} />}
           </div>
           <h1 className="text-4xl font-bold text-foreground tracking-tight">
             {role === "admin" ? "Admin Portal" : "User Login"}
@@ -131,7 +133,7 @@ export default function LoginPage() {
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 ml-1">User ID</label>
             <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" size={20} />
+              <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" size={20} />
               <input
                 type="text"
                 required

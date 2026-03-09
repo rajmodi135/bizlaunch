@@ -13,7 +13,17 @@ import {
   Calendar
 } from "lucide-react";
 
-const proposals: any[] = [];
+type Proposal = {
+  id: string;
+  client: string;
+  type: string;
+  date: string;
+  value: string;
+  status: string;
+  color: string;
+};
+
+const proposals: Proposal[] = [];
 
 export default function Proposals() {
   const [searchTerm, setSearchTerm] = useState("");

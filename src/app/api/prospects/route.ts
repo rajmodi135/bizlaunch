@@ -34,6 +34,13 @@ export async function GET(request: Request) {
   }
 
   try {
+    type PlaceSummary = {
+      place_id: string;
+      name?: string;
+      rating?: number;
+      user_ratings_total?: number;
+      formatted_address?: string;
+    };
     // 1. Text Search to find businesses
     const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(`${query} in ${location}`)}&key=${apiKey}`;
     console.log("Fetching search results from:", searchUrl.replace(apiKey, "REDACTED"));
@@ -54,7 +61,7 @@ export async function GET(request: Request) {
 
     // 2. Fetch details for each business (to get the website)
     const resultsWithDetails = await Promise.all(
-      searchData.results.slice(0, 10).map(async (place: any) => {
+      searchData.results.slice(0, 10).map(async (place: PlaceSummary) => {
         const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,rating,formatted_address,formatted_phone_number,website,user_ratings_total,types&key=${apiKey}`;
         
         try {
@@ -76,10 +83,10 @@ export async function GET(request: Request) {
           console.error(`Error fetching details for ${place.place_id}:`, e);
           return {
             id: place.place_id,
-            name: place.name,
+            name: place.name || "Business",
             rating: place.rating || 0,
             reviews: place.user_ratings_total || 0,
-            address: place.formatted_address,
+            address: place.formatted_address || "",
             phone: "N/A",
             website: null,
             category: "Business"

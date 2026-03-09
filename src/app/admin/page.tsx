@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Users, 
   UserPlus, 
   Shield, 
   Trash2, 
@@ -13,7 +12,6 @@ import {
   LogOut,
   User as UserIcon,
   CheckCircle2,
-  XCircle,
   Key,
   Eye,
   EyeOff,

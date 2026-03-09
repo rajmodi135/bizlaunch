@@ -7,20 +7,20 @@ import Sidebar from "./Sidebar";
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isAuthenticated] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return !!localStorage.getItem("auth_token");
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     const isLoginPage = pathname?.startsWith("/login");
 
     if (!token && !isLoginPage) {
-      setIsAuthenticated(false);
       router.push("/login");
     } else if (token && isLoginPage) {
       // Already logged in? Redirect to dashboard
       router.push("/");
-    } else {
-      setIsAuthenticated(true);
     }
   }, [pathname, router]);
 
@@ -32,7 +32,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Don't show anything while we check auth status (prevents flickering)
-  if (isAuthenticated === null || (isAuthenticated === false && !pathname?.startsWith("/login"))) {
+  if (!isAuthenticated && !pathname?.startsWith("/login")) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

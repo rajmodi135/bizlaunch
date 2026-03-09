@@ -9,13 +9,20 @@ import {
   Phone,
   Plus,
   Loader2,
-  Filter,
   CheckCircle2,
   Settings
 } from "lucide-react";
 import { dataService } from "@/utils/dataService";
 
-const mockResults: any[] = [];
+type ProspectResult = {
+  id: string;
+  name: string;
+  rating: number;
+  address: string;
+  phone?: string;
+  website?: string | null;
+  category: string;
+};
 
 const SUGGESTED_CITIES = ["Jaipur", "Delhi", "Mumbai", "Bangalore", "New York", "London"];
 const SUGGESTED_CATEGORIES = ["Cafe", "Restaurant", "Dentist", "Plumber", "Gym", "Bakery"];
@@ -24,7 +31,7 @@ export default function ProspectFinder() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ProspectResult[]>([]);
   const [addedIds, setAddedIds] = useState<string[]>([]);
   const [minRating, setMinRating] = useState(4.0);
   const [onlyNoWebsite, setOnlyNoWebsite] = useState(true);
@@ -56,9 +63,9 @@ export default function ProspectFinder() {
     try {
       if (isStaticDemo) {
         setResults([
-          { id: "1", name: "The Coffee House", rating: "4.8", address: `123 Main St, ${location || 'Your City'}`, phone: "555-0123", website: "", category: query || "Cafe" },
-          { id: "2", name: "Green Garden Bistro", rating: "4.2", address: `456 Oak Ave, ${location || 'Your City'}`, phone: "555-0456", website: "", category: query || "Restaurant" },
-          { id: "3", name: "Modern Auto Repair", rating: "4.5", address: `789 Pine Rd, ${location || 'Your City'}`, phone: "555-0789", website: "", category: query || "Auto Services" },
+          { id: "1", name: "The Coffee House", rating: 4.8, address: `123 Main St, ${location || 'Your City'}`, phone: "555-0123", website: "", category: query || "Cafe" },
+          { id: "2", name: "Green Garden Bistro", rating: 4.2, address: `456 Oak Ave, ${location || 'Your City'}`, phone: "555-0456", website: "", category: query || "Restaurant" },
+          { id: "3", name: "Modern Auto Repair", rating: 4.5, address: `789 Pine Rd, ${location || 'Your City'}`, phone: "555-0789", website: "", category: query || "Auto Services" },
         ]);
         setIsSimulated(true);
       } else {
@@ -67,16 +74,27 @@ export default function ProspectFinder() {
         if (data.error) {
           throw new Error(data.error);
         }
-        setResults(data.results || []);
+        const normalized: ProspectResult[] = (data.results || []).map((r: unknown) => {
+          const rec = r as Record<string, unknown>;
+          const id = String(rec.id ?? rec.place_id ?? "");
+          const name = String(rec.name ?? "");
+          const rating = typeof rec.rating === "number" ? (rec.rating as number) : Number(rec.rating) || 0;
+          const address = String(rec.address ?? rec.formatted_address ?? "");
+          const phone = rec.phone ? String(rec.phone) : undefined;
+          const website = (rec.website as string | null | undefined) ?? null;
+          const category = String(rec.category ?? "Business");
+          return { id, name, rating, address, phone, website, category };
+        });
+        setResults(normalized);
         setIsSimulated(data.isSimulated);
       }
     } catch (error) {
       console.error("Search failed:", error);
       // Fallback results if API fails or no key
       setResults([
-        { id: "1", name: "The Coffee House", rating: "4.8", address: `123 Main St, ${location || 'Your City'}`, phone: "555-0123", website: "", category: "Cafe" },
-        { id: "2", name: "Green Garden Bistro", rating: "4.2", address: `456 Oak Ave, ${location || 'Your City'}`, phone: "555-0456", website: "", category: "Restaurant" },
-        { id: "3", name: "Modern Auto Repair", rating: "4.5", address: `789 Pine Rd, ${location || 'Your City'}`, phone: "555-0789", website: "", category: "Auto Services" },
+        { id: "1", name: "The Coffee House", rating: 4.8, address: `123 Main St, ${location || 'Your City'}`, phone: "555-0123", website: "", category: "Cafe" },
+        { id: "2", name: "Green Garden Bistro", rating: 4.2, address: `456 Oak Ave, ${location || 'Your City'}`, phone: "555-0456", website: "", category: "Restaurant" },
+        { id: "3", name: "Modern Auto Repair", rating: 4.5, address: `789 Pine Rd, ${location || 'Your City'}`, phone: "555-0789", website: "", category: "Auto Services" },
       ]);
       setIsSimulated(true);
     } finally {
@@ -85,14 +103,13 @@ export default function ProspectFinder() {
   };
 
   const filteredResults = results.filter(biz => {
-    const bizRating = parseFloat(biz.rating) || 0;
-    const matchesRating = bizRating >= minRating;
+    const matchesRating = biz.rating >= minRating;
     const matchesWebsite = onlyNoWebsite ? !biz.website : true;
     const matchesPhone = onlyWithPhone ? Boolean(biz.phone && String(biz.phone).trim()) : true;
     return matchesRating && matchesWebsite && matchesPhone;
   });
 
-  const addToCRM = async (biz: any) => {
+  const addToCRM = async (biz: ProspectResult) => {
     setAddedIds(prev => [...prev, biz.id]);
     await dataService.addLead({
       id: biz.id,

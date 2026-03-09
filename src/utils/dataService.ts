@@ -42,7 +42,7 @@ export const dataService = {
       if (typeof window === "undefined") return [];
       const stored = localStorage.getItem(USERS_KEY);
       return stored ? JSON.parse(stored) : [];
-    } catch (e) {
+    } catch {
       const stored = localStorage.getItem(USERS_KEY);
       return stored ? JSON.parse(stored) : [];
     }
@@ -52,7 +52,7 @@ export const dataService = {
     try {
       const { error } = await supabase.from('users').insert([user]);
       if (error) throw error;
-    } catch (e) {
+    } catch {
       const users = await dataService.getUsers();
       localStorage.setItem(USERS_KEY, JSON.stringify([...users, user]));
     }
@@ -62,7 +62,7 @@ export const dataService = {
     try {
       const { error } = await supabase.from('users').update(updates).eq('id', id);
       if (error) throw error;
-    } catch (e) {
+    } catch {
       const users = await dataService.getUsers();
       const updated = users.map(u => u.id === id ? { ...u, ...updates } : u);
       localStorage.setItem(USERS_KEY, JSON.stringify(updated));
@@ -73,7 +73,7 @@ export const dataService = {
     try {
       const { error } = await supabase.from('users').delete().eq('id', id);
       if (error) throw error;
-    } catch (e) {
+    } catch {
       const users = await dataService.getUsers();
       const updated = users.filter(u => u.id !== id);
       localStorage.setItem(USERS_KEY, JSON.stringify(updated));
@@ -108,7 +108,7 @@ export const dataService = {
       if (typeof window === "undefined") return [];
       const stored = localStorage.getItem(LEADS_KEY);
       return stored ? JSON.parse(stored) : [];
-    } catch (e) {
+    } catch {
       const stored = localStorage.getItem(LEADS_KEY);
       return stored ? JSON.parse(stored) : [];
     }
@@ -118,7 +118,7 @@ export const dataService = {
     try {
       const { error } = await supabase.from('leads').insert([lead]);
       if (error) throw error;
-    } catch (e) {
+    } catch {
       const leads = await dataService.getLeads();
       if (typeof window !== "undefined") {
         localStorage.setItem(LEADS_KEY, JSON.stringify([...leads, lead]));
@@ -126,5 +126,4 @@ export const dataService = {
     }
   },
 };
-
 

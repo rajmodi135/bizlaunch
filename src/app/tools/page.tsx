@@ -13,6 +13,25 @@ import {
   Share2
 } from "lucide-react";
 
+type AuditIssue = {
+  title: string;
+  severity: "critical" | "high" | "medium" | "low";
+  description: string;
+};
+
+type AuditOpportunity = {
+  title: string;
+  impact: "High" | "Medium" | "Low";
+  description: string;
+};
+
+type AuditReport = {
+  score: number;
+  businessName: string;
+  issues: AuditIssue[];
+  opportunities: AuditOpportunity[];
+};
+
 const auditPoints = [
   { name: "Google Maps Presence", weight: 20 },
   { name: "Website Availability", weight: 30 },
@@ -25,7 +44,7 @@ const auditPoints = [
 export default function AuditTools() {
   const [url, setUrl] = useState("");
   const [isAuditing, setIsAuditing] = useState(false);
-  const [report, setReport] = useState<any>(null);
+  const [report, setReport] = useState<AuditReport | null>(null);
 
   const runAudit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +162,7 @@ export default function AuditTools() {
               <h3 className="font-black text-2xl text-foreground flex items-center gap-3">
                 <XCircle className="text-red-500" /> Critical Issues
               </h3>
-              {report.issues.map((issue: any, idx: number) => (
+              {report.issues.map((issue, idx) => (
                 <div key={idx} className="bg-red-500/5 p-6 rounded-3xl border border-red-500/20 hover:bg-red-500/10 transition-colors group">
                   <div className="flex items-start gap-4">
                     <AlertCircle className="text-red-500 shrink-0 mt-1 group-hover:scale-110 transition-transform" size={24} />
@@ -160,7 +179,7 @@ export default function AuditTools() {
               <h3 className="font-black text-2xl text-foreground flex items-center gap-3">
                 <CheckCircle2 className="text-emerald-500" /> Opportunities
               </h3>
-              {report.opportunities.map((opp: any, idx: number) => (
+              {report.opportunities.map((opp, idx) => (
                 <div key={idx} className="bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/20 hover:bg-emerald-500/10 transition-colors group">
                   <div className="flex items-start gap-4">
                     <Zap className="text-emerald-500 shrink-0 mt-1 group-hover:scale-110 transition-transform fill-emerald-500/20" size={24} />

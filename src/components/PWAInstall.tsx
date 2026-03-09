@@ -11,6 +11,7 @@ type BeforeInstallPromptEvent = Event & {
 export default function PWAInstall() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [show, setShow] = useState(false);
+  const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -50,27 +51,56 @@ export default function PWAInstall() {
       return Boolean(nav.standalone);
     })();
 
-  if (!show && !(isiOS && !inStandalone)) return null;
+  const showBanner = show || (isiOS && !inStandalone);
 
   return (
-    <div className="fixed inset-x-0 bottom-4 z-50 flex items-center justify-center px-4 sm:px-0">
-      <div className="max-w-md w-full bg-card border border-border rounded-2xl shadow-xl p-4 flex items-center gap-3">
-        <div className="flex-1">
-          <p className="text-sm font-bold text-foreground">
-            {isiOS && !inStandalone
-              ? "Add to Home Screen: tap Share, then 'Add to Home Screen'"
-              : "Install BizLaunch for a faster, app-like experience"}
-          </p>
+    <>
+      {/* Banner */}
+      {showBanner && (
+        <div className="fixed inset-x-0 bottom-4 z-50 flex items-center justify-center px-4 sm:px-0">
+        <div className="max-w-md w-full bg-card border border-border rounded-2xl shadow-xl p-4 flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-bold text-foreground">
+              {isiOS && !inStandalone
+                ? "Add to Home Screen: tap Share, then 'Add to Home Screen'"
+                : "Install BizLaunch for a faster, app-like experience"}
+            </p>
+          </div>
+          {!isiOS && (
+            <button
+              onClick={install}
+              className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors flex items-center gap-2"
+            >
+              <Download size={16} /> Install
+            </button>
+          )}
         </div>
-        {!isiOS && (
-          <button
-            onClick={install}
-            className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Download size={16} /> Install
-          </button>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+
+      {/* Corner button */}
+      <button
+        aria-label="Add to Home Screen"
+        onClick={() => {
+          if (deferredPrompt) {
+            install();
+          } else if (isiOS && !inStandalone) {
+            setHint("On iPhone: Share → Add to Home Screen");
+            setTimeout(() => setHint(null), 4000);
+          } else {
+            setHint("Installation prompt not available");
+            setTimeout(() => setHint(null), 2500);
+          }
+        }}
+        className="fixed bottom-6 right-6 z-50 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 active:scale-95 transition-all p-4"
+      >
+        <Download size={20} />
+      </button>
+      {hint && (
+        <div className="fixed bottom-20 right-6 z-50 bg-card border border-border text-foreground rounded-lg shadow-lg px-3 py-2 text-xs font-bold">
+          {hint}
+        </div>
+      )}
+    </>
   );
 }

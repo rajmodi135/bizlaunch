@@ -68,20 +68,20 @@ export default function AuditTools() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-background min-h-screen text-foreground transition-colors">
-      <div className="mb-8 text-center md:text-left">
-        <h1 className="text-4xl font-black tracking-tight mb-2 text-foreground">Digital Audit Tool</h1>
-        <p className="text-slate-500 text-lg">Generate a professional audit report for any prospect in seconds.</p>
+    <div className="p-4 md:p-8 max-w-5xl mx-auto bg-background min-h-screen text-foreground transition-colors">
+      <div className="mb-6 md:mb-8 text-center md:text-left">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-foreground">Digital Audit Tool</h1>
+        <p className="text-slate-500 text-base md:text-lg">Generate a professional audit report for any prospect in seconds.</p>
       </div>
 
-      <div className="bg-card p-8 rounded-[2.5rem] shadow-2xl border border-border mb-8 backdrop-blur-sm transition-colors">
-        <form onSubmit={runAudit} className="flex flex-col md:flex-row gap-4">
+      <div className="bg-card p-4 md:p-8 rounded-[1.75rem] md:rounded-[2.5rem] shadow-2xl border border-border mb-6 md:mb-8 backdrop-blur-sm transition-colors">
+        <form onSubmit={runAudit} className="flex flex-col md:flex-row gap-3 md:gap-4">
           <div className="flex-1 relative group">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" size={24} />
             <input
               type="text"
               placeholder="Business Name or URL"
-              className="w-full pl-14 pr-6 py-5 bg-background border border-border rounded-3xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-xl font-bold text-foreground placeholder:text-slate-600 shadow-inner"
+              className="w-full pl-14 pr-4 md:pr-6 py-4 md:py-5 bg-background border border-border rounded-2xl md:rounded-3xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-lg md:text-xl font-bold text-foreground placeholder:text-slate-600 shadow-inner"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
@@ -89,7 +89,7 @@ export default function AuditTools() {
           <button 
             type="submit"
             disabled={isAuditing}
-            className="bg-blue-600 text-white px-10 py-5 rounded-3xl font-black text-lg hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 disabled:bg-border disabled:text-slate-500 border border-blue-400/20"
+            className="bg-blue-600 text-white px-6 md:px-10 py-4 md:py-5 rounded-2xl md:rounded-3xl font-black text-base md:text-lg hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-2 md:gap-3 disabled:bg-border disabled:text-slate-500 border border-blue-400/20"
           >
             {isAuditing ? <Loader2 className="animate-spin" size={28} /> : (
               <>
@@ -102,8 +102,8 @@ export default function AuditTools() {
 
       {report && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-card p-8 rounded-[2.5rem] border border-border shadow-xl flex flex-col items-center justify-center text-center backdrop-blur-sm transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border shadow-xl flex flex-col items-center justify-center text-center backdrop-blur-sm transition-colors">
               <div className="relative w-40 h-40 mb-6">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -133,8 +133,8 @@ export default function AuditTools() {
               <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Critical Issues Found</p>
             </div>
 
-            <div className="md:col-span-2 bg-card p-8 rounded-[2.5rem] border border-border shadow-xl backdrop-blur-sm transition-colors">
-              <div className="flex items-center justify-between mb-8">
+            <div className="md:col-span-2 bg-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-border shadow-xl backdrop-blur-sm transition-colors">
+              <div className="flex items-center justify-between mb-6 md:mb-8">
                 <h3 className="font-black text-2xl text-foreground">Key Audit Points</h3>
                 <span className="text-xs font-black text-slate-500 uppercase tracking-widest bg-background px-3 py-1.5 rounded-full border border-border">Simulated</span>
               </div>
@@ -157,7 +157,7 @@ export default function AuditTools() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             <div className="space-y-4">
               <h3 className="font-black text-2xl text-foreground flex items-center gap-3">
                 <XCircle className="text-red-500" /> Critical Issues

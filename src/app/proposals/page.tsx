@@ -34,8 +34,8 @@ export default function Proposals() {
   );
 
   return (
-    <div className="p-8 bg-background min-h-screen text-foreground transition-colors">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div className="p-4 md:p-8 bg-background min-h-screen text-foreground transition-colors">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">Proposals</h1>
           <p className="text-slate-500">Track and manage your project quotes and contracts.</p>
@@ -45,8 +45,8 @@ export default function Proposals() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="bg-card p-4 md:p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
               <FileText size={20} />
@@ -56,7 +56,7 @@ export default function Proposals() {
           <p className="text-3xl font-black text-foreground">12</p>
           <p className="text-xs text-slate-500 font-medium mt-1">Last 30 days</p>
         </div>
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
+        <div className="bg-card p-4 md:p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
               <CheckCircle2 size={20} />
@@ -66,7 +66,7 @@ export default function Proposals() {
           <p className="text-3xl font-black text-foreground">8</p>
           <p className="text-xs text-slate-500 font-medium mt-1">66% Conversion rate</p>
         </div>
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
+        <div className="bg-card p-4 md:p-6 rounded-2xl border border-border shadow-sm backdrop-blur-sm transition-colors">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
               <Clock size={20} />
@@ -79,7 +79,7 @@ export default function Proposals() {
       </div>
 
       <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden backdrop-blur-sm transition-colors">
-        <div className="p-6 border-b border-border">
+        <div className="p-4 md:p-6 border-b border-border">
           <div className="relative max-w-md group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" size={18} />
             <input
@@ -94,9 +94,9 @@ export default function Proposals() {
 
         <div className="divide-y divide-border">
           {filteredProposals.map((proposal) => (
-            <div key={proposal.id} className="p-6 flex items-center justify-between hover:bg-border/30 transition-colors group">
-              <div className="flex items-center gap-6">
-                <div className="bg-background border border-border p-4 rounded-2xl text-slate-500 group-hover:text-blue-400 group-hover:bg-blue-500/10 transition-all">
+            <div key={proposal.id} className="p-4 md:p-6 flex items-center justify-between hover:bg-border/30 transition-colors group">
+              <div className="flex items-center gap-4 md:gap-6">
+                <div className="bg-background border border-border p-3 md:p-4 rounded-2xl text-slate-500 group-hover:text-blue-400 group-hover:bg-blue-500/10 transition-all">
                   <FileText size={24} />
                 </div>
                 <div>
@@ -111,7 +111,7 @@ export default function Proposals() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-8">
+              <div className="flex items-center gap-4 md:gap-8">
                 <div className="text-right">
                   <p className="font-bold text-foreground">{proposal.value}</p>
                   <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-black border mt-1 inline-block ${proposal.color}`}>
@@ -125,7 +125,7 @@ export default function Proposals() {
                   <button className="p-2 text-slate-500 hover:text-foreground hover:bg-border rounded-lg transition-all">
                     <MoreVertical size={20} />
                   </button>
-                  <button className="ml-4 bg-background border border-border text-foreground px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-foreground hover:text-background transition-all">
+                  <button className="ml-4 bg-background border border-border text-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-foreground hover:text-background transition-all">
                     View <ArrowRight size={16} />
                   </button>
                 </div>
@@ -135,7 +135,7 @@ export default function Proposals() {
         </div>
 
         {filteredProposals.length === 0 && (
-          <div className="py-20 text-center">
+          <div className="py-16 md:py-20 text-center">
             <h3 className="text-foreground font-bold text-lg">No proposals found</h3>
             <p className="text-slate-500 font-medium">Try adjusting your search or create a new one.</p>
           </div>

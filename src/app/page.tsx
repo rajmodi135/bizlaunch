@@ -49,7 +49,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="p-8 bg-background min-h-screen transition-colors">
+    <div className="p-4 md:p-8 bg-background min-h-screen transition-colors">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
           <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">
@@ -59,7 +59,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         {stats.map((stat) => (
           <div key={stat.name} className="bg-card backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-border hover:border-blue-500/50 transition-all group">
             <div className="flex justify-between items-start mb-4">
@@ -80,7 +80,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-card backdrop-blur-sm rounded-3xl p-8 border border-border shadow-xl">
+        <div className="lg:col-span-2 bg-card backdrop-blur-sm rounded-3xl p-4 md:p-8 border border-border shadow-xl">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
               <Clock className="text-blue-400" /> Recent Activity
@@ -119,7 +119,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-8 text-white shadow-2xl shadow-blue-900/30 relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 md:p-8 text-white shadow-2xl shadow-blue-900/30 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/20 transition-all"></div>
           <div className="relative z-10">
             <h2 className="text-2xl font-bold mb-4">Ready to scale?</h2>

@@ -128,8 +128,8 @@ export default function ProspectFinder() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto relative bg-background min-h-screen text-foreground transition-colors">
-      <div className="mb-8 flex justify-between items-start">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto relative bg-background min-h-screen text-foreground transition-colors">
+      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row justify-between items-start gap-3">
         <div>
           <h1 className="text-4xl font-bold tracking-tight mb-2 text-foreground">Prospect Finder</h1>
           <p className="text-slate-500 text-lg">Search Google Maps for high-rated businesses without a website.</p>
@@ -190,9 +190,9 @@ export default function ProspectFinder() {
         </div>
       )}
 
-      <div className="bg-card backdrop-blur-sm p-8 rounded-3xl border border-border shadow-xl mb-8 transition-colors">
-        <form onSubmit={handleSearch} className="flex flex-col gap-8">
-          <div className="flex flex-col md:flex-row gap-4">
+      <div className="bg-card backdrop-blur-sm p-4 md:p-8 rounded-3xl border border-border shadow-xl mb-6 md:mb-8 transition-colors">
+        <form onSubmit={handleSearch} className="flex flex-col gap-6 md:gap-8">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-4">
             <div className="flex-1 relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" size={20} />
               <input
@@ -264,7 +264,7 @@ export default function ProspectFinder() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-8 pt-6 border-t border-border/50">
+          <div className="flex flex-wrap items-center gap-4 md:gap-8 pt-6 border-t border-border/50">
             <div className="flex items-center gap-4">
               <span className="text-sm font-bold text-slate-500">Min Rating:</span>
               <div className="flex gap-2">
@@ -327,7 +327,7 @@ export default function ProspectFinder() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             {filteredResults.map((biz) => (
               <div key={biz.id} className="bg-card backdrop-blur-sm p-8 rounded-3xl border border-border shadow-xl hover:border-blue-500/50 transition-all group">
                 <div className="flex justify-between items-start mb-6">
